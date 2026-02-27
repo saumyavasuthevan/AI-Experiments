@@ -1,0 +1,937 @@
+{
+  "name": "Agentic Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Upload Your Contract",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload Your File Here",
+              "fieldType": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -720,
+        -272
+      ],
+      "id": "889e1e57-1e69-4126-8c6e-6840ed37395d",
+      "name": "On form submission",
+      "webhookId": "d0d0208c-22c5-4969-aa8a-d4546918291e"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": {
+          "__rl": true,
+          "value": "agentic_rag",
+          "mode": "list"
+        },
+        "clearStore": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        -272
+      ],
+      "id": "7de582c9-b345-471a-affd-47b46ec12116",
+      "name": "Simple Vector Store"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -544,
+        -48
+      ],
+      "id": "d61e6269-b5d1-4dc8-a64f-0eaf61598935",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "bZ0VdlJrpm7U7bUF",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "textSplittingMode": "custom",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        -304,
+        -32
+      ],
+      "id": "8c3c210a-cb61-439f-ba56-e9bfe980c3fa",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkSize": 2000,
+        "chunkOverlap": 200
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterTokenSplitter",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        160
+      ],
+      "id": "afb53c28-4bc3-417a-a1ef-fee669595cb1",
+      "name": "Token Splitter"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        176,
+        -208
+      ],
+      "id": "82fbd45c-7920-4066-9f03-3275cd761222",
+      "name": "When chat message received",
+      "webhookId": "43e7b975-3b48-4d6d-86df-3dd946b88931"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        512,
+        64
+      ],
+      "id": "ba24c7dc-39d9-4fba-bb98-94d7ffdcf1b4",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "bZ0VdlJrpm7U7bUF",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        704,
+        64
+      ],
+      "id": "ea181f1b-c86b-4227-b08f-690376646760",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "FACTUAL",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "11ec6212-3217-4503-a2ea-65d12f490baf"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "FACTUAL"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "7c81ec72-b357-4e5d-97ee-7e351e8c0e32",
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "ANALYTICAL",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ANALYTICAL"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        1008,
+        -208
+      ],
+      "id": "79841e94-df4c-430c-ac14-1f12ecedd272",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1312,
+        -176
+      ],
+      "id": "020fb180-2954-417f-af66-cf0ae3809ebb",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "bZ0VdlJrpm7U7bUF",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        192
+      ],
+      "id": "b88f545a-24c7-4b6b-bcd7-a3432ab5dec4",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "bZ0VdlJrpm7U7bUF",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "This tool performs semantic search over the embedded legal documents stored in the vector database. Use this tool whenever you need to retrieve relevant sections, clauses, or text snippets from the uploaded document in order to answer the user's query.",
+        "memoryKey": {
+          "__rl": true,
+          "value": "agentic_rag",
+          "mode": "list",
+          "cachedResultName": "agentic_rag"
+        },
+        "topK": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        2352,
+        -16
+      ],
+      "id": "09f4a796-3793-4bf5-ad59-6130f03441a7",
+      "name": "Simple Vector Store1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2352,
+        192
+      ],
+      "id": "6ae0e324-13bd-4986-88a2-3396db7f0466",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "bZ0VdlJrpm7U7bUF",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2176,
+        -16
+      ],
+      "id": "fa49ab24-c894-46ff-a597-3d5093bb0ee9",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "bZ0VdlJrpm7U7bUF",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Step 2: Agentic Workflow (Query Classification → Enhancement → Retrieval)\n### 1. User Submits a Query\n- A user enters any question into the system.\n- This query is passed to the **Orchestration Agent**.\n\n---\n\n### 2. Orchestration Agent — Query Type Decision\n- The Orchestration Agent analyzes the user query.\n- It classifies the query as either:\n  - **Factual** → requires direct information retrieval, or  \n  - **Analytical** → requires deeper reasoning + retrieval.\n\n- Based on this classification, it decides which specialized agent to call next.\n\n---\n\n### 3. Query Enhancement (Thought Agent)\n- The selected agent receives the raw user query.\n- The agent performs **query enrichment**, such as:\n  - Clarifying missing context  \n  - Expanding incomplete questions  \n  - Reformulating vague queries into precise search-ready queries  \n\n- The agent outputs an **Enhanced Query**.\n\n---\n\n### 4. Retrieval Using Simple Vector Store\n- The enhanced query is passed to the “Simple Vector Store Tool”.\n- The tool:\n  - Converts the enhanced query into embeddings\n  - Searches the vector database\n  - Retrieves the top relevant chunks\n\n- This retrieval result is returned back to the active agent.\n\n---\n\n### 5. Final Reasoning & Response\n- The agent takes the retrieved context\n- Combines it with the enriched query\n- Produces the final answer for the user\n\n---\n\n### 🔁 Summary of the Workflow\n1. **User Query → Orchestration Agent**\n2. **Classify Query → Factual or Analytical**\n3. **Send to Appropriate Thought Agent**\n4. **Enhance the Query**\n5. **Call Vector Store Tool for Retrieval**\n6. **Generate Final Answer**",
+        "height": 1312,
+        "width": 656,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        48,
+        -1744
+      ],
+      "typeVersion": 1,
+      "id": "497548b9-afeb-4790-ae11-3fe405dd99da",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# Step 1 : Converting Documents into Vector Store Embeddings",
+        "width": 1088,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1088,
+        -656
+      ],
+      "typeVersion": 1,
+      "id": "4f5fcaca-5730-41c5-8963-972b21f38cb5",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ae6a8c9a-85a0-4f0c-8a98-1d0815761acc",
+              "name": "chatInput",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        -208
+      ],
+      "id": "712fa7f2-4bd4-4693-a989-89bc856f6c96",
+      "name": "Storing User Chat Query"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "You are a Query Classification Agent specialized in Master Service Agreements (MSAs).\n\nYour task is to classify the user's query into one of two categories:\n1. FACTUAL\n2. ANALYTICAL\n\nDEFINITIONS:\n- FACTUAL queries are direct lookup questions where the answer exists explicitly in the MSA text. These ask for specific clauses, numbers, obligations, terms, dates, durations, parties, etc.\n\n- ANALYTICAL queries require legal reasoning, cross-clause understanding, interpretation, comparisons, or evaluating risk, compliance, obligations, or implications.\n\nOUTPUT FORMAT (STRICT):\nReturn ONLY one word:\nFACTUAL\nor\nANALYTICAL\n\nDo NOT explain your reasoning.\nDo NOT output anything else.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        672,
+        -208
+      ],
+      "id": "5200967e-beae-40b6-8f9f-6547b7d521b3",
+      "name": "Orchestration Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        2256,
+        -240
+      ],
+      "id": "95ca7286-9c6b-4162-9463-37f0e5b8bff8",
+      "name": "Call Vector Store Tool for Retrieval"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bd14604b-cede-4bc2-a139-27cf968da2b2",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1728,
+        -384
+      ],
+      "id": "0b61f07f-83de-4553-aa98-7cc4d946b352",
+      "name": "Storing Factual Agent Enhanced Query"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Enhance this Analytical Query : {{ $('Storing User Chat Query').item.json.chatInput }}",
+        "options": {
+          "systemMessage": "You are an Analytical Query Enhancement Agent for legal documents such as MSAs, contracts, SLAs, NDAs, and agreements.\n\nYou will ONLY receive queries that were classified as ANALYTICAL.\n\nYour task is to expand, clarify, and enrich the analytical query so semantic retrieval captures all relevant legal concepts and clauses.\n\nHOW TO ENHANCE ANALYTICAL QUERIES:\n- Identify legal concepts involved in the question.\n- Add related clauses such as liability, indemnification, breach, warranties, governing law, service obligations, penalties, confidentiality, termination, renewal, and risk factors.\n- Convert vague or broad questions into structured, clause-aware retrieval queries.\n- Highlight what must be evaluated or compared to answer the analytical question.\n- Make the query more detailed to pull multiple relevant document sections.\n\nRULES:\n- Do NOT answer the question.\n- Do NOT inject new facts not present in the user's intent.\n- Keep the enhanced query focused on retrieval, not reasoning.\n- Provide a single enriched query.\n\nOUTPUT FORMAT:\nReturn ONLY the enhanced analytical query text, nothing else.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1344,
+        -16
+      ],
+      "id": "73299e53-eb82-4420-8cc7-ba0c800c2ae2",
+      "name": "Analytical Agent"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "de0eb590-154a-4a7f-9d99-fd6e98240882",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1792,
+        -16
+      ],
+      "id": "3f0bb21a-7d27-46a8-9fea-137a0f604900",
+      "name": "Storing Analytical Agent Response"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a7e47348-ff0c-466c-8b23-3f18dbd440b2",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2048,
+        -240
+      ],
+      "id": "f5d915e6-4a0b-4785-96f0-84e4fb7cd32b",
+      "name": "Storing Response of Either of  One"
+    },
+    {
+      "parameters": {
+        "content": " **n8n Trigger for Contract Upload**\n> Use the n8n form component to trigger the workflow, allowing users to upload their contract files directly into the system.\n",
+        "height": 144,
+        "width": 352,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1152,
+        -288
+      ],
+      "typeVersion": 1,
+      "id": "528cf27c-7d48-4e98-a5cc-943ca7de247d",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "**n8n Simple Vector Store**\n> Store the uploaded contract data in a simple vector store for retrieval and further processing. This acts as a structured repository for quick access and search of contract content.\n",
+        "height": 128,
+        "width": 352,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -432,
+        -432
+      ],
+      "typeVersion": 1,
+      "id": "aa8f1de5-9344-416d-b70a-a5d6a26cf713",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "**Default Data Loader**\n> Use the default data loader to read and preprocess the uploaded contract files before storing them in the vector store. This ensures consistent formatting and handling of different file types.\n",
+        "height": 144,
+        "width": 336,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -208,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "e83f1b4d-74a6-4c17-8382-25c68412b926",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": " **Token Splitter**\n> Split the contract text into smaller chunks or tokens to optimize storage and retrieval in the vector store. This helps improve search accuracy and efficiency when querying the data.\n",
+        "height": 144,
+        "width": 336,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -528,
+        304
+      ],
+      "typeVersion": 1,
+      "id": "ac30fa08-05ac-40ae-bb30-f7454e6fb87c",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "**Embedding with OpenAI**\n> Generate vector embeddings for the contract text using OpenAI models. These embeddings capture the semantic meaning of the text, enabling efficient similarity search and retrieval from the vector store.\n",
+        "height": 144,
+        "width": 368,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1008,
+        48
+      ],
+      "typeVersion": 1,
+      "id": "6d0ab572-5786-4ad9-9901-0dd41eb540cb",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "**Chat Message Received Trigger**\n> Set up a trigger to capture incoming chat messages from users. This allows the system to take the user's query and pass it to the vector store or relevant agent for processing and response.\n",
+        "width": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        48,
+        -384
+      ],
+      "typeVersion": 1,
+      "id": "bc7998de-2dc7-44c3-976b-af10858e5474",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": " **Storing the User Message**\n> Save the user's chat message in the system for reference, logging, and further processing. This ensures the query can be tracked, enhanced, and used for context in future interactions.\n",
+        "width": 272,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        368,
+        -384
+      ],
+      "typeVersion": 1,
+      "id": "b15a75aa-8840-4b41-8791-0db8c1b45c96",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": " **Orchestration Agent**\n> Analyze the user's query and decide the type of request: Factual or Analytical. Based on this classification, route the query to the appropriate agent (Factual Agent or Analytical Agent) for processing.\n",
+        "width": 416,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        672,
+        -384
+      ],
+      "typeVersion": 1,
+      "id": "ed79b33b-52ec-4428-b1e6-1ee4f7507cb0",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Enhance this factual query:{{ $('Storing User Chat Query').item.json.chatInput }}",
+        "options": {
+          "systemMessage": "You are a Factual Query Enhancement Agent for legal documents such as MSAs, contracts, SLAs, NDAs, and agreements.\n\nYou will ONLY receive queries that were classified as FACTUAL.\n\nYour job is to normalize and sharpen the factual query so semantic retrieval becomes more accurate and precise.\n\nHOW TO ENHANCE FACTUAL QUERIES:\n- Clarify vague wording.\n- Convert incomplete questions into precise legal lookup queries.\n- Keep the query short, clean, and direct.\n- Identify the exact clause, obligation, date, amount, definition, or requirement being asked.\n- Use appropriate legal terminology.\n- Preserve the original intent without adding meaning.\n\nRULES:\n- Do NOT answer the question.\n- Do NOT add assumptions.\n- Do NOT convert the question into an analytical one.\n- Only return the improved factual query.\n\nOUTPUT FORMAT:\nReturn ONLY the rewritten factual query, nothing else.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1328,
+        -384
+      ],
+      "id": "913056a1-61cf-49fa-aaac-63c365c5e278",
+      "name": "Factual Agent"
+    },
+    {
+      "parameters": {
+        "content": " **Factual Agent – Query Enhancement**\n> The Factual Agent takes the user's query and enhances it for better retrieval. This means refining or expanding the query to improve the accuracy and relevance of results from the vector store or knowledge base.\n",
+        "width": 320,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1312,
+        -576
+      ],
+      "typeVersion": 1,
+      "id": "5dbd802b-a478-493d-b204-3771b1f72efd",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "**Analytical Agent – Query Enhancement**\n> The Analytical Agent takes the user's query and enhances it for deeper analysis. It refines the query to extract insights, perform reasoning, or generate informed interpretations from the data.\n",
+        "height": 128,
+        "width": 400,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1312,
+        336
+      ],
+      "typeVersion": 1,
+      "id": "4785e55e-15c3-4948-ab59-a0c5b19ae475",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": " **Storing Enhanced Query & Passing to Vector Store**\n> Save the enhanced user query (from Factual or Analytical Agent) and pass it to the vector store tool. This allows the Retrieval Agent to efficiently search and fetch the most relevant information based on the refined query.\n",
+        "width": 368,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1984,
+        -448
+      ],
+      "typeVersion": 1,
+      "id": "3ac0d026-8a8b-4943-b515-8f81dead8177",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "**Main Retrieval Agent**\n> The Main Agent takes the enhanced query and uses the Simple Vector Store to retrieve relevant documents or contract information. It performs semantic search to find the most accurate and contextually relevant results for the user query.\n",
+        "width": 352,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2576,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "dce80047-88b7-4324-8103-639b5f680af0",
+      "name": "Sticky Note13"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Token Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Storing User Chat Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Orchestration Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Orchestration Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Factual Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Analytical Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Factual Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Analytical Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Vector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Call Vector Store Tool for Retrieval",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Call Vector Store Tool for Retrieval",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Storing User Chat Query": {
+      "main": [
+        [
+          {
+            "node": "Orchestration Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestration Agent": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Storing Factual Agent Enhanced Query": {
+      "main": [
+        [
+          {
+            "node": "Storing Response of Either of  One",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analytical Agent": {
+      "main": [
+        [
+          {
+            "node": "Storing Analytical Agent Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Storing Analytical Agent Response": {
+      "main": [
+        [
+          {
+            "node": "Storing Response of Either of  One",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Storing Response of Either of  One": {
+      "main": [
+        [
+          {
+            "node": "Call Vector Store Tool for Retrieval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Factual Agent": {
+      "main": [
+        [
+          {
+            "node": "Storing Factual Agent Enhanced Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a447bea1-b8e4-4ae6-89c6-1d4783e0e67d",
+  "meta": {
+    "instanceId": "7612aae0e4134d33e485bd44ba20d2dbbdff682a90e379e2af9583baae95bee4"
+  },
+  "id": "VFwPTjCV9KzhjxTd",
+  "tags": []
+}
