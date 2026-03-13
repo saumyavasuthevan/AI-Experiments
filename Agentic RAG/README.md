@@ -1,6 +1,6 @@
-# Agentic RAG Orchestration Workflow
+# Agentic RAG Workflow
 
-This repository contains an implementation of a modular **Retrieval-Augmented Generation (RAG)** pipeline. By using an **Orchestration Agent** and specialized **Thought Agents**, the system ensures high-precision retrieval and context-aware responses.
+To extract and analyse risks in contracts for lawyers, created an Agentic RAG workflow, using **Orchestration Agent** and **Agentic Retrieval** to improve retrieval of key terms and ensure analysis of risks is grounded in contract data.
 
 
 
