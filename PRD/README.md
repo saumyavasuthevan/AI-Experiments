@@ -3,7 +3,7 @@
 I built this to test Claude’s ability to synthesize and structure a Product Requirements Document (PRD) by connecting internal company context with external market signals. 
 
 ### What it does
-Generates a structured **"Version 0"** draft based on provided internal research and external market data.
+Generates a structured draft based on provided internal research and external market data.
 
 ### The Thinking Behind the Experiment
 I am a firm believer that you cannot generate a meaningful PRD with the click of a button. A great PRD requires a deep understanding of internal goals, alignment with broader company strategies, and iteration.
