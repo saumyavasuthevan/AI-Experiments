@@ -4,7 +4,7 @@ A growing collection of my experiments with AI / agentic workflows
 
 | Tool | Experiment / Agent | Description |
 | :--- | :--- | :--- |
-| **Claude Code** | [Competitive Intel Agent](./claude/agents/competitive-intel.md) | Created a competitive intel agent that tracks emerging threats by tracking changes in competitor strengths, weaknesses, and positioning over time. |
+| **Claude Code** | [Competitive Intel Agent](/.claude/agents/competitive-intel.md) | Created a competitive intel agent that tracks emerging threats by tracking changes in competitor strengths, weaknesses, and positioning over time. |
 | **Claude Code** | [PRD Generator](./PRD) | **Experiment only:** Created PRD draft by synthesizing market research and internal company context files.<br>**Caveat:** Aimed to speed up summarization and initial ideation but cannot replace the deep understanding of problem context and strategic direction that a PM must first start with. |
 | **Claude Code** | [Company Intelligence](./Claude%20Code%20-%20Company%20Intelligence) | Created automated market intelligence reports. |
 | **Open Claw** | [Competitive Intel](./Open%20Claw%20Competitive%20Intel) | Created an Open Claw skill that sends weekly competitive intelligence reports to PMs. |
