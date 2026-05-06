@@ -91,8 +91,9 @@ See detailed [roadmap and prioritisation criteria](https://docs.google.com/sprea
 | :--- | :--- | :--- |
 | **Claude Code** | [Interview Analysis Agent](.claude/agents/interview-analysis.md) | Analyses user research interviews for pain points, bright spots, and project-specific dimensions — one file per participant, with verbatim quotes. No synthesis. |
 | **Claude Code** | [Survey Analysis Agent](.claude/agents/survey-analysis.md) | Highlights key themes by user segment; deterministically computes all statistics via Python/pandas so the model only interprets, improving accuracy. |
+| **Claude Code** | [Customer Feedback Analysis Agent](.claude/agents/customer-feedback-analysis.md) | Analyses customer support feedback verbatims for themes by user segment. |
+| **Claude Code** | [Research Synthesis Agent](.claude/agents/research-synthesis.md) | Synthesises findings from analysis files (interview, survey, feedback) into a structured, visual-first research report for stakeholders. |
 | **Claude Code** | [Company Context Agent](portfolio/create-company.md) | Conducts automated deep-dives into a company, its competitors, market landscape, and products. Serves as context for other agents (e.g. Interview Analysis Agent, PRD Generator). |
-| **Claude Code** | [Customer Support Analysis Agent](.claude/agents/customer-support-analysis.md) | Analyses customer support feedback verbatims for themes by user segment. |
 | **OpenClaw** | [Competitive Intel](.claude/agents/competitive-intel.md) | Sends a weekly competitive intelligence report to PMs. |
 
 ### 📄 Artifacts

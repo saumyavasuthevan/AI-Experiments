@@ -137,8 +137,8 @@ Run ALL checks applicable to the detected output type. For each issue found, rec
 
 | ID | Check |
 |---|---|
-| A-1 | **Quote relevance** — re-read each quote in the context of the finding it supports. The quote must directly evidence the specific claim — not just be from the same topic area. Flag any quote where the connection is only contextually adjacent, not directly evidential. |
-| A-2 | **Quote verbatim accuracy** — locate each quoted string in the source file. Compare character-by-character. Flag any substitution, omission, addition, or paraphrase — even a single word change counts as an Error. |
+| A-1 | **Quote relevance** — for each finding, decompose the description into its specific descriptive claims (adjectives, comparisons, specific behaviours — e.g. "straightforward", "preferred over desktop", "step-by-step format"). For each claim, verify at least one supporting quote contains a word or phrase that directly anchors it. If any claim has no lexical or semantic anchor in any supporting quote, Flag A-1 for that finding. Then assess overall: the quote must directly evidence the specific claim, not just be from the same topic area. |
+| A-2 | **Quote verbatim accuracy** — (1) If `quote-registry-[unit].json` exists in the analysis folder: for each registry entry, `Read` the source file at `line_number`; compare `verbatim` against source (Auto-fix any mismatch using source text). Then compare each output file quote against its registry `verbatim` (Auto-fix any mismatch using registry text). (2) If no registry exists: locate each quoted string in the source file; compare character-by-character. Flag any substitution, omission, addition, or paraphrase — even a single word change. |
 | A-3 | **Speaker attribution** — for each quote, verify the attributed speaker matches the source. Flag misattributions. |
 | A-4 | **n/% arithmetic** — for every `XX% (n=YYY)` pair, verify: `round(n / base_n × 100, 1) = XX%`. Flag discrepancies. |
 | A-5 | **Required sections present** — verify all required sections for the output type exist (see type-specific checks below for the required list). |
@@ -154,7 +154,7 @@ Required sections: Pain Points, Bright Spots. Each finding must follow the forma
 |---|---|
 | I-1 | **No-inference rule** — every pain point and bright spot must have been explicitly stated by the participant. Flag any finding where the description infers a problem or positive (e.g. "long wait time is a pain point") without a corresponding direct participant statement in the supporting quotes. |
 | I-2 | **Other-user observations** — if a quote describes a third group (e.g. "seniors find it hard"), the finding description must frame it as the participant's *observation about others*, not as a direct finding about the participant themselves. Flag violations. |
-| I-3 | **Minimum quote count** — each finding must have ≥1 supporting quote. Flag any finding with zero quotes. |
+| I-3 | **Minimum quote count** — run `grep -n "^### \|Supporting quotes" [output-file]` and pair each `###` header with the next "Supporting quotes" occurrence. Any `###` not paired with a Supporting quotes block before the next `###` — in any section (Pain Points, Bright Spots, Content Evaluation, or any project-specific dimension) — is an I-3 violation. |
 | I-4 | **Speaker label format** — speakers must be labeled U1, U2, etc. (not "participant", "respondent", or a name alone). If the source uses names, verify the analysis uses the pattern `U1 (Name)`. Flag inconsistencies. |
 | I-5 | **Empty transcript guard** — if the source transcript is under 100 words, no analysis file should exist for it. Flag if an analysis file exists for a very short or empty source. |
 

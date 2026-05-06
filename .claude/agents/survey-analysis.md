@@ -83,6 +83,37 @@ stats = {
 print(json.dumps(stats, indent=2))
 ```
 
+**Mandatory block — embed in script before `print(json.dumps(...))`, for every survey:**
+
+```python
+# MANDATORY: multi-select intersections (run for every pair of multi-select columns)
+# Identify multi-select columns as those where the same respondent can appear in multiple columns
+# representing the same question (e.g. channel_h365, channel_website).
+# Replace `multiselect_col_groups` with the actual column lists for this survey.
+for col_group in multiselect_col_groups:                     # list of lists, one list per question
+    for i, col_a in enumerate(col_group):
+        for col_b in col_group[i+1:]:
+            mask = df[col_a].notna() & df[col_b].notna()
+            key = f"q_{col_a}_and_{col_b}_n"
+            stats[key] = int(mask.sum())
+            stats[f"q_{col_a}_and_{col_b}_pct"] = round(mask.sum() / N * 100, 1)
+
+# MANDATORY: top-2-box / bottom-2-box for every ordinal scale column (4+ distinct values)
+for col in scale_cols:                                        # list of ordinal-scale column names
+    non_null = df[col].dropna()
+    base_n = len(non_null)
+    vals = sorted(non_null.unique())
+    if len(vals) >= 4:
+        bottom2_mask = non_null.isin(vals[:2])
+        top2_mask    = non_null.isin(vals[-2:])
+        stats[f"q_{col}_bottom2box_n"]   = int(bottom2_mask.sum())
+        stats[f"q_{col}_bottom2box_pct"] = round(bottom2_mask.sum() / base_n * 100, 1)
+        stats[f"q_{col}_top2box_n"]      = int(top2_mask.sum())
+        stats[f"q_{col}_top2box_pct"]    = round(top2_mask.sum() / base_n * 100, 1)
+```
+
+These two blocks are not optional. If any multi-select group or scale column is absent from `stats.json` after the script runs, fix the script and rerun before proceeding.
+
 **Validation — Cross-tab zero-sum consistency (embed in script, before `print(json.dumps(...))`):**
 
 After computing all cross-tab breakdowns, add this guard block to catch silent parsing failures before writing `stats.json`:
@@ -123,11 +154,17 @@ For every `skew_*` entry where `reportable: true`, verify the referenced groups 
 
 For each `demo_*` key, verify that the sum of all `n` values equals the total `N`. Flag any demographic where the total is off by more than 1 (rounding tolerance).
 
+**Check 3 — Combined group fields**
+
+For every multi-select question with 2+ columns in the same group: verify `stats.json` contains at least one `q_<col_a>_and_<col_b>_n` entry. For every ordinal scale column with 4+ distinct values: verify `stats.json` contains `q_<col>_top2box_pct` and `q_<col>_bottom2box_pct`. If any are missing, add the computation to the script, rerun it, and re-check — do not proceed without them.
+
 If all checks pass, proceed to Step 5. If any check fails, diagnose the root cause in the script (do not patch the JSON by hand), fix it, rerun the script, overwrite `stats.json`, and re-run all checks.
 
 ## Step 5 — Analyse and Produce Report
 
 Load `stats.json` first. Use its values verbatim for all counts, percentages, means, MoE, threshold, dot positions, net scores, and pp gaps throughout the report. Do not recompute any figure — read it from the JSON.
+
+**Hard stop — forbidden prose arithmetic:** Before writing any bullet that expresses a combined figure (e.g. "used both A and B", "Difficult or Very difficult combined", "top 2 box"), locate the pre-computed field in `stats.json`. If the field does not exist, stop writing, return to Step 4b, add the computation, rerun the script, and re-check Step 4c before continuing. Never add, subtract, or combine percentages or counts in prose.
 
 ---
 

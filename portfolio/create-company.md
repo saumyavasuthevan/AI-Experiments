@@ -41,7 +41,9 @@ flowchart LR
 ---
 
 ## Evals
-- **Method:** [`ext-research-eval`](../.claude/agents/ext-research-eval.md) — Uses a **two-pronged** evaluation approach: 1. **Machine-led evaluation**: Conducts **objective** checks (e.g., quant computations, link and citation coverage, template adherence). 2. **Human-led evaluation**: Conducts **subjective** checks based on HHH (Honesty, Helpfulness, Harmlessness) to assess its true usefulness to PMs. 
+**Method:** [`ext-research-eval`](../.claude/agents/ext-research-eval.md) — Uses a **two-pronged** evaluation approach: 
+1. **Machine-led evaluation**: Conducts **objective** checks (e.g., quant computations, link and citation coverage, template adherence). 
+2. **Human-led evaluation**: Conducts **subjective** checks based on HHH (Honesty, Helpfulness, Harmlessness) to assess its true usefulness to PMs. 
 
 ### Machine-led Evaluation 
 Based on latest competitive intel eval (version 4):
@@ -100,14 +102,20 @@ Based on latest competitive intel eval (version 4):
 
 ## Outcome
 
-✅ **Accuracy / Quality:** While still requiring spot checks in early stage of dev, now every claim is grounded in an independently sourced, date-stamped, auditable citation.
+✅ **Accuracy / Quality:** While still requiring spot checks in this early stage of dev, now every claim is grounded with citations. 
 
 ✅ **Cost savings:** **~€1,150/year** — process time reduced from 6 hrs to 75 mins (incl. verification)<br/>
 *Assumptions: run ~6 times/year · ~6 new companies/year · pegged to PM salary*
 
 ---
 
-## Links
+## Next step
 
-- [Agent instructions](../.claude/agents/create-company.md) — prompt Claude uses at runtime
+- Assess if successsful eval results can be replicated with other companies
+
+---
+
+## Link to Agent
+
+- [Company Context Agent](../.claude/agents/create-company.md) — prompt Claude uses at runtime
 

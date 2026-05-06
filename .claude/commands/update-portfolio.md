@@ -54,7 +54,7 @@ flowchart LR
 
 ---
 
-## Iterations
+## Challenges and Iterations
 
 | Challenge | Fix | Result |
 |---|---|---|
@@ -64,9 +64,42 @@ flowchart LR
 
 ## Evals
 
-- **Method:** [description]
-- **Coverage:** [which outputs were evaluated and which are pending]
-- **Report:** [link]
+**Method:** [`[eval-agent-name]`](path) — Uses a **two-pronged** evaluation approach:
+1. **Machine-led evaluation**: Conducts **objective** checks (e.g., [list check types]).
+2. **Human-led evaluation**: Conducts **subjective** checks based on HHH (Honesty, Helpfulness, Harmlessness).
+
+### Machine-led Evaluation
+
+Based on latest [output type] eval (version [n]):
+
+| Metric | v1 ([date]) | Δ (v[n-1]→v[n]) |
+|---|---|---|
+| [metric] | [value] | [delta] |
+
+### Human-led Evaluation (HHH)
+
+Based on latest [output type] eval (version [n]):
+
+**Honesty** — Accuracy and truthfulness
+
+| Criteria | Yes / No |
+|---|---|
+| H1: [criteria] | [Yes/No] |
+
+**Helpfulness** — Effectiveness in solving the PM's problem
+
+| Criteria | Yes / No |
+|---|---|
+| He1: [criteria] | [Yes/No] |
+
+**Harmlessness** — Safe and appropriately framed
+
+| Criteria | Yes / No |
+|---|---|
+| Ha1: [criteria] | [Yes/No] |
+
+- **Eval Reports:**
+  - [date — output type](path)
 
 ---
 
@@ -78,17 +111,22 @@ flowchart LR
 
 ## Outcome
 
-**Accuracy / Quality:** [one sentence]
+✅ **Accuracy / Quality:** [one sentence]
 
-**Value saved:** ~€X,XXX/year — task reduced from X hrs to X mins (incl. verification)<br/>
+✅ **Cost savings:** ~€X,XXX/year — task reduced from X hrs to X mins (incl. verification)<br/>
 *Assumptions: run ~X times/[period] · [frequency rationale] · pegged to PM salary*
 
 ---
 
-## Links
+## Next step
 
-- [Agent instructions](path) — prompt Claude uses at runtime
-- [Eval report](path) — latest verification run
+- [Next step]
+
+---
+
+## Link to Agent
+
+- [Agent Name](path) — prompt Claude uses at runtime
 ```
 
 Pre-fill the following without asking the user:
@@ -97,9 +135,9 @@ Pre-fill the following without asking the user:
 
 **Purpose** — copy the description verbatim from the README.md row for this agent. Do not rewrite or summarise — the README row is already the canonical description.
 
-**Links — agent instructions** — always `.claude/agents/[agent-name].md` (or the correct subfolder).
+**Link to Agent** — always `.claude/agents/[agent-name].md` (or the correct subfolder).
 
-**Links — latest eval report** — search `projects/*/06- evals/` for files whose name contains the agent name or output type. If found, link to the most recent. If not found, use the placeholder.
+**Eval reports** — search `projects/*/06- evals/` for files whose name contains the agent name or output type. If found, list them under `- **Eval Reports:**` in the Evals section. If not found, use the placeholder.
 
 **Sample outputs** — search `projects/*/04- analysis/` and `projects/*/05- outputs/` for files likely produced by this agent (match by naming convention or agent type). List up to 3 recent files with relative paths. If none found, leave the placeholder.
 
@@ -113,7 +151,7 @@ git log --follow -p .claude/agents/[agent-name].md
 
 Read the diff output. For each commit that changed the agent file, identify what was added, removed, or restructured. Map changes to probable challenges and fixes — e.g. a new rule being added implies a problem that rule was solving.
 
-Draft the Iterations as a markdown table with three columns — ordered highest impact → lowest:
+Draft the Challenges and Iterations as a markdown table with three columns — ordered highest impact → lowest:
 
 | Challenge | Fix | Result |
 |---|---|---|
@@ -126,6 +164,8 @@ Draft the Iterations as a markdown table with three columns — ordered highest 
 
 Follow the language rules from `CLAUDE.md → Working Style → Language` for all three columns. Order rows highest impact → lowest. Do not invent metrics; use numbers from the diff if they exist.
 
+**Tone:** Technically accurate, but sharp and legible at first glance — one crisp sentence per cell. A reader should immediately understand the failure and the fix without needing to know the agent's internals. Avoid verbose qualifications; trust specific details (e.g. a concrete wrong value, a named mechanism) to carry the weight.
+
 If the git log shows no meaningful changes (single commit or no history), leave one placeholder row.
 
 ### Step 5 — Ask the user four questions
@@ -136,7 +176,7 @@ Present all questions in one message — do not ask sequentially:
 >
 > **1. Workflow** — describe the inputs, outputs, and any agents that feed into or receive from this one. I'll build the Mermaid diagram from your description. (e.g. 'Takes interview transcripts + company context files → produces 1 analysis file per transcript → consumed by int-research-eval and research-synthesis')
 >
-> **2. Iterations** — here's what I inferred from git history:
+> **2. Challenges and Iterations** — here's what I inferred from git history:
 >
 > | Challenge | Fix | Result |
 > |---|---|---|
@@ -145,12 +185,19 @@ Present all questions in one message — do not ask sequentially:
 >
 > Correct, add to, or replace any item. Reply 'looks right' to keep as-is.
 >
-> **3. Evals** — did you run a formal eval on this agent? If yes, describe the method briefly and I'll link to the report. Reply 'skip' to leave this section blank.
+> **3. Evals** — did you run a formal eval on this agent? If yes:
+> - Which eval agent did you use (e.g. `ext-research-eval`, `int-research-eval`)?
+> - What objective checks did the machine-led evaluation run?
+> - Do you have version-by-version metric data (e.g. Quant Claims Accuracy, Link Validity)?
+> - What HHH criteria did the human-led evaluation cover?
+> - Which eval reports should I link to?
+>
+> Reply 'skip' to leave this section blank with placeholders.
 >
 > **4. Frequency** — how often do you run this agent? (e.g. '2x per week', 'once per sprint', '3x per month')
 > My estimates for the time calculation — correct me if wrong:
 > - Manual time: [estimated based on task type — e.g. '~3 hours — involves sourcing, reading, and synthesising multiple external sources']
-> - Automated time (including human verification): [estimated — e.g. '~25 minutes: agent runs in ~5 mins, plus ~20 mins to review and verify output']"
+> - Automated time (human verification only — exclude machine processing time): [estimated — e.g. '~20 mins to review and verify output']"
 
 **Do not write anything until the user has responded to all four questions.**
 
@@ -159,8 +206,8 @@ Present all questions in one message — do not ask sequentially:
 Assemble the complete file using:
 - Pre-filled content from Step 3
 - Mermaid diagram built from the user's workflow description (Q1)
-- Iterations table with user corrections applied (Q2)
-- Evals section populated from Q3, or placeholder text if they replied 'skip'
+- Challenges and Iterations table with user corrections applied (Q2)
+- Evals section assembled from Q3 — two-pronged structure with method description, machine-led metric table (with version columns), and human-led HHH table; eval report links listed under `- **Eval Reports:**` at the bottom of the section. If they replied 'skip', use the placeholder template.
 - Value saved calculated from Q4 (see below)
 
 **Mermaid diagram rules**
@@ -192,7 +239,7 @@ annual_value   = (time_saved_min / 60) × runs_per_year × hourly_rate
 
 Round to the nearest €50. Format as:
 
-> *Cost savings:** ~€X,XXX/year — task reduced from X hrs to X mins (incl. verification)
+> ✅ **Cost savings:** ~€X,XXX/year — task reduced from X hrs to X mins (incl. verification)<br/>
 > *Assumptions: run ~X times/[period] · [frequency rationale] · pegged to PM salary*
 
 If the user did not supply frequency, leave the placeholder unchanged.
@@ -231,5 +278,5 @@ portfolio/[agent-name].md updated. Sections changed: [list].
 - Never run both Path A and Path B — branch once and stop.
 - Never modify `.claude/agents/` files or source data — read only.
 - Build the Mermaid diagram from the user's description, not by inferring from agent file steps. The user may reference agents that do not yet exist.
-- For the Iterations table, infer from git diff as a starting draft only — always show the draft to the user for confirmation before writing.
+- For the Challenges and Iterations table, infer from git diff as a starting draft only — always show the draft to the user for confirmation before writing.
 - Apply the same description style as README rows: verb-led, no labels, no nested clauses.

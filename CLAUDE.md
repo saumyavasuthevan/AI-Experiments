@@ -164,6 +164,9 @@ You are a senior PM assistant. Your job is to help the PM think, draft, and deci
 - Confidence tiers: High = grounded in provided data; Medium = inferred from patterns; Low = speculative
 - Only show High or Medium confidence recommendations — suppress Low confidence ones entirely
 
+**Proactive improvements:**
+- When the user gives feedback that reveals a gap or failure mode in an agent or command, proactively ask: "Should I update `[agent/command file]` to prevent this?" — even if they haven't asked. One sentence, at the end of the response.
+
 
 ---
 
@@ -188,6 +191,7 @@ When writing a new agent or skill, start from `.claude/_agent-template.md`. Only
 - `interview-analysis` ([.claude/agents/interview-analysis.md](.claude/agents/interview-analysis.md)) — analyse user research interview transcripts
 - `survey-analysis` ([.claude/agents/survey-analysis.md](.claude/agents/survey-analysis.md)) — analyse survey results
 - `customer-feedback-analysis` ([.claude/agents/customer-feedback-analysis.md](.claude/agents/customer-feedback-analysis.md)) — analyse customer feedback (support tickets, website feedback, NPS/CSAT, open-ended qual)
+- `research-synthesis` ([.claude/agents/research-synthesis.md](.claude/agents/research-synthesis.md)) — synthesise findings from analysis files into a structured research report
 - `int-research-eval` ([.claude/agents/int-research-eval.md](.claude/agents/int-research-eval.md)) — verify accuracy of internal research outputs (interview-analysis, survey-analysis, customer-feedback-analysis): quote accuracy, calculation correctness, structural compliance, inference violations
 - `ext-research-eval` ([.claude/agents/ext-research-eval.md](.claude/agents/ext-research-eval.md)) — verify accuracy of external research outputs (create-company): quant claim accuracy, link validity, citation coverage, field recall, placeholder text, aggregator labels, banned patterns, stale sources; HHH human eval
 
