@@ -32,7 +32,7 @@ flowchart LR
 
 ## Evals
 
-**Method:** [`int-research-eval`](.claude/agents/int-research-eval.md) **Machine-led evaluation**: Conducts **objective** checks (e.g., quote verbatim accuracy, quote relevance, speaker attribution, structural compliance, inference violations, minimum quote count).
+**Method: **Machine-led evaluation**: ** [`int-research-eval`](.claude/agents/int-research-eval.md) conducts **objective** checks (e.g., quote verbatim accuracy, quote relevance, speaker attribution, structural compliance, inference violations, minimum quote count).
 
 ### Machine-led Evaluation
 
@@ -40,12 +40,9 @@ Based on latest interview analysis eval (version 2):
 
 | Metric | v1 (U1 · Apr 18) | v2 (U2 · May 06) | Δ (v1→v2) |
 |---|---|---|---|
-| Auto-fix | 7 | 5 | -2 |
-| Flagged | 1 | 2 | +1 |
-| Passed | 9 | 9 | — |
 | Precision | 100% | 100% | — |
 | Recall | 93.8% | 100% | +6.2pp |
-| F1 | 96.8% | 100% | +3.2pp |
+| F1 (balances precision and recall)| 96.8% | 100% | +3.2pp |
 
 - **Eval Reports:**
   - [2026-05-06 — HPB interview U2](projects/HPB/06-%20evals/2026-05-06-interview-u2-verification.md)
@@ -70,7 +67,7 @@ Based on latest interview analysis eval (version 2):
 
 ## Next step
 
-- Test interview analysis agent on another set of interview transcripts
+- Test interview analysis agent on another set of interview transcripts from another study
 
 ---
 
