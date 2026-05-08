@@ -1,6 +1,6 @@
 # 🔬 PM Operating System (WIP)
 
-🔒 Some links are intentionally restricted due to protect IP. 
+🔒 *Some links are intentionally restricted to protect IP.* 
 
 ### tl;dr
 The PM OS is a unified system to inform **faster product bets**, made with the **confidence** to defend them. 
