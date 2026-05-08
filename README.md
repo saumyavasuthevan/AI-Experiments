@@ -1,26 +1,26 @@
-# 🔬 PM Operating System 
+# 🔬 PM Operating System (WIP)
+
+🔒 Some links are intentionally restricted due to protect IP. 
 
 ### tl;dr
-A growing collection of **WIP** Product Management workflows and tools (Claude Code, OpenClaw, n8n) to minimise OPEX while delivering PM artifacts users can trust 
+The PM OS is a unified system to inform **faster product bets**, made with the **confidence** to defend them. 
 
+A growing collection of **WIP** workflows I'm building on **Claude Code**, after earlier iterations in n8n and OpenClaw. 
 
 ### Challenge
 PMs are under heavy pressure to **quickly determine ["what to build"](https://www.ycombinator.com/rfs)** so that we can continue to deliver business outcomes at the new speed of execution
 
-* But **fragmented tooling** and **ad hoc processes** results in:
+* But **fragmented tooling** and **ad hoc processes** result in:
   * Handing off human judgement to agents in the wrong use case
   * Outputs of unreliable quality which humans then need to spend a lot of time verifying or risk errors (which in turn, loses trust)
   * Incremental speed gains
 * Ultimately, these disappointing outcomes result in an inability to compete with competitors due to:
-  * Higher **OPEX** (due to lower operational efficiency and effectiveness)
-  * Fewer successful business outcomes (due to **a less powerful engine to make sound product bets**)
+  * Higher **OPEX** 
+  * **Fewer successful business outcomes** 
 
 ### User Personas
  * Short-term target: **Solo PMs**
- * Long-term targets: **Squad PMs** and **"People who do product work"** (Rationale: This requires a scaled solution to collaborate effectively and alignment on shared processes, beyond MVP scope)
-
-### Vision 
-A unified system to inform **faster product bets**, made with the **confidence** to defend them. 
+ * Long-term targets: **Squad PMs** and **"People who do product work"** (Rationale: This requires a scaled solution to collaborate effectively and alignment on shared processes, beyond MVP scope) 
 
 ### Product Principles  
 1. **Never compromise on quality**
@@ -53,6 +53,20 @@ A unified system to inform **faster product bets**, made with the **confidence**
 
    *Good looks like: Precision/recall improves version to version and we learn why.*
 
+### Measurements
+**Lagging metrics:**
+
+* **Efficiency:** 20% reduction in average time spent per validated feature (discovery to ready-for-dev, segmented by story points)
+* **Quality:** 90% of agents in production meet eval thresholds, 1Q post-launch (measured quarterly)
+* **Stakeholder trust:** % of OS-assisted outputs shared with stakeholders that were accepted without further requests for evidence or verification (manually tracked 14-days post-share)
+
+**Leading metrics:**
+
+* 20% reduction in time within each task type
+* % fully autonomous tasks increasing MoM (agent completed, output used as-is)
+* % semi-autonomous tasks increasing MoM (agent completed, PM refined or validated)
+* % manual tasks decreasing MoM (agent not used or output not used entirely)
+
 ### Roadmap
 MVP prioritises the critical user journey to minimise lead time from a business goal to a validated feature that's ready for development:
 * Discovery: User research
@@ -68,20 +82,6 @@ R1 expands on the critical user journey to further increase efficiency:
 * Comms
 
 See detailed [roadmap and prioritisation criteria](https://docs.google.com/spreadsheets/d/14EWsWYquwbsFQ8w3uOwpFP5Fme2mU-jBUyPLY8_u5ts/edit?gid=0#gid=0)
-
-### Measurements
-**Lagging metrics:**
-
-* **Efficiency:** 20% reduction in average time spent per validated feature (discovery to ready-for-dev, segmented by story points)
-* **Quality:** 90% of agents in production meet eval thresholds, 1Q post-launch (measured quarterly)
-* **Stakeholder trust:** % of OS-assisted outputs shared with stakeholders that were accepted without further requests for evidence or verification (manually tracked 14-days post-share)
-
-**Leading metrics:**
-
-* 20% reduction in time within each task type
-* % fully autonomous tasks increasing MoM (agent completed, output used as-is)
-* % semi-autonomous tasks increasing MoM (agent completed, PM refined or validated)
-* % manual tasks decreasing MoM (agent not used or output not used entirely)
 
 ## Index
 
